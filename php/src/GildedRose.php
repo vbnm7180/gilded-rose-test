@@ -19,136 +19,213 @@ final class GildedRose
     public function updateQuality(): void
     {
 
-        abstract class Handler {
+        abstract class Handler
+        {
 
             protected $successor;
             protected $name;
+            protected $speed;
+            protected $limit;
 
-            public function setNext($handler){
-               $this->successor=$handler;
+
+            public function checkLimit($item)
+            {
+                if ($item->quality == 0) {
+                    $this->limit == true;
+                } else {
+                    $this->limit == false;
+                }
             }
 
-            public function updateItem ($item)
+            public function setSpeed($item)
             {
-                if ($this->successor != null)
-                {
+                if ($item->sell_in < 0) {
+                    $this->speed = 2;
+                } else {
+                    $this->speed = 1;
+                }
+            }
+
+            public function setNext($handler)
+            {
+                $this->successor = $handler;
+            }
+
+            public function updateItem($item)
+            {
+                if ($this->successor != null) {
                     $this->successor->updateItem($item);
                 }
             }
-
         }
 
-        class speedHandler extends Handler {
-            
+        class conjuredItemHandler extends Handler
+        {
 
-        }
+            private $name = 'Conjured';
 
-        class conjuredItemHandler extends Handler {
-
-            private $name='Conjured';
-
-            public function updateItem ($item){
-                if($item->name==$this->name){
-                    $item->sell_in = $item->sell_in - 1;
-                    $item->quality = $item->quality - 2;
-                }
-                else{
-                    parent::updateItem ($item);
-                }
+            public function checkLimit($item)
+            {
+                parent::checkLimit($item);
             }
 
+            public function setSpeed($item)
+            {
+                parent::setSpeed($item);
+            }
+
+            public function updateItem($item)
+            {
+                if ($item->name == $this->name) {
+
+                    $this->checkLimit($item);
+                    if ($this->limit == true) {
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality;
+                    } else {
+                        $this->setSpeed($item);
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality - 2 * $this->speed;
+                    }
+                } else {
+                    parent::updateItem($item);
+                }
+            }
         }
 
-        class sulfurasItemHandler extends Handler {
+        class sulfurasItemHandler extends Handler
+        {
 
-            private $name='Sulfuras, Hand of Ragnaros';
+            private $name = 'Sulfuras, Hand of Ragnaros';
 
-            public function updateItem ($item){
-                if($item->name==$this->name){
+            public function updateItem($item)
+            {
+                if ($item->name == $this->name) {
                     $item->sell_in = $item->sell_in;
                     $item->quality = $item->quality;
-                }
-                else{
-                    parent::updateItem ($item);
-                }
-            }
-
-        }
-
-        class agedBrieItemHandler extends Handler {
-
-            private $name='Aged Brie';
-
-            public function updateItem ($item){
-                if($item->name==$this->name){
-                    $item->sell_in = $item->sell_in-1;
-                    $item->quality = $item->quality+1;
-                }
-                else{
-                    parent::updateItem ($item);
+                } else {
+                    parent::updateItem($item);
                 }
             }
         }
 
-        class backstagePassesItemHandler extends Handler {
+        class agedBrieItemHandler extends Handler
+        {
 
-            private $name='Backstage passes to a TAFKAL80ETC concert';
+            private $name = 'Aged Brie';
 
-            public function updateItem ($item){
-                if($item->name==$this->name){
 
-                    if ($item->sell_in>11){
-                        $item->sell_in = $item->sell_in-1;
-                        $item->quality = $item->quality+1;
+            
+            public function checkLimit($item)
+            {
+                if ($item->quality == 50) {
+                    $this->limit == true;
+                } else {
+                    $this->limit == false;
+                }
+            }
+
+            public function setSpeed($item)
+            {
+                parent::setSpeed($item);
+            }
+
+            public function updateItem($item)
+            {
+                if ($item->name == $this->name) {
+
+                    $this->checkLimit($item);
+                    if ($this->limit == true) {
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality;
+                    } else {
+                        $this->setSpeed($item);
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality + 1 * $this->speed;
                     }
-                    elseif ($item->sell_in>6){
-                        $item->sell_in = $item->sell_in-1;
-                        $item->quality = $item->quality+2;
-                    }
-                    elseif ($item->sell_in>0){
-                        $item->sell_in = $item->sell_in-1;
-                        $item->quality = $item->quality+3;
-                    
-                    }
-                    elseif ($item->sell_in==0){
+                } else {
+                    parent::updateItem($item);
+                }
+            }
+        }
+
+        class backstagePassesItemHandler extends Handler
+        {
+
+            private $name = 'Backstage passes to a TAFKAL80ETC concert';
+
+            public function updateItem($item)
+            {
+                if ($item->name == $this->name) {
+
+                    if ($item->sell_in > 11) {
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality + 1;
+                    } elseif ($item->sell_in > 6) {
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality + 2;
+                    } elseif ($item->sell_in > 0) {
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality + 3;
+                    } elseif ($item->sell_in == 0) {
                         $item->quality = 0;
                     }
-                }
-                else{
-                    parent::updateItem ($item);
+                } else {
+                    parent::updateItem($item);
                 }
             }
         }
 
-        class normalItemHandler extends Handler {
+        class normalItemHandler extends Handler
+        {
 
-            //private $name='Aged Brie';
-
-            public function updateItem ($item){
-                    $item->sell_in = $item->sell_in-1;
-                    $item->quality = $item->quality+1;
+            public function checkLimit($item)
+            {
+                parent::checkLimit($item);
             }
+
+            public function setSpeed($item)
+            {
+                parent::setSpeed($item);
+            }
+
+            public function updateItem($item)
+            {
+                if ($item->name == $this->name) {
+
+                    $this->checkLimit($item);
+                    if ($this->limit == true) {
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality;
+                    } else {
+                        $this->setSpeed($item);
+                        $item->sell_in = $item->sell_in - 1;
+                        $item->quality = $item->quality - 1 * $this->speed;
+                    }
+                } else {
+                    parent::updateItem($item);
+                }
+            }
+
         }
 
         foreach ($this->items as $item) {
-            $conjured=new conjuredItemHandler();
-            $sulfuras=new sulfurasItemHandler();
-            $agedBrie=new agedBrieItemHandler();
-            $backstagePasses=new backstagePassesItemHandler();
-            $normal=new normalItemHandler();
+            $conjured = new conjuredItemHandler();
+            $sulfuras = new sulfurasItemHandler();
+            $agedBrie = new agedBrieItemHandler();
+            $backstagePasses = new backstagePassesItemHandler();
+            $normal = new normalItemHandler();
 
             $conjured->setNext($sulfuras);
             $sulfuras->setNext($agedBrie);
             $agedBrie->setNext($backstagePasses);
             $backstagePasses->setNext($normal);
 
-            $conjured->updateItem ($item);
-
-
+            $conjured->updateItem($item);
         }
 
 
-    
+
 
         foreach ($this->items as $item) {
             if ($item->name != 'Aged Brie' and $item->name != 'Backstage passes to a TAFKAL80ETC concert') {
