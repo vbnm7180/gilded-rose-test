@@ -23,13 +23,6 @@ final class GildedRose
 
             protected $successor;
             protected $name;
-            //protected $item;
-
-            /*
-            public function __constructor($item){
-                $this->item=$item;
-            }
-            */
 
             public function setNext($handler){
                $this->successor=$handler;
@@ -39,18 +32,16 @@ final class GildedRose
             {
                 if ($this->successor != null)
                 {
-                    $this->successor->updateItem();
-                }
-                //Поведение по умолчанию
-                else{
-                    $item->sell_in = $item->sell_in - 1;
-                    $item->quality = $item->quality - 1;
+                    $this->successor->updateItem($item);
                 }
             }
 
         }
 
-        
+        class speedHandler extends Handler {
+            
+
+        }
 
         class conjuredItemHandler extends Handler {
 
@@ -129,16 +120,28 @@ final class GildedRose
             }
         }
 
+        class normalItemHandler extends Handler {
+
+            //private $name='Aged Brie';
+
+            public function updateItem ($item){
+                    $item->sell_in = $item->sell_in-1;
+                    $item->quality = $item->quality+1;
+            }
+        }
+
         foreach ($this->items as $item) {
             $conjured=new conjuredItemHandler();
             $sulfuras=new sulfurasItemHandler();
             $agedBrie=new agedBrieItemHandler();
             $backstagePasses=new backstagePassesItemHandler();
+            $normal=new normalItemHandler();
 
             $conjured->setNext($sulfuras);
             $sulfuras->setNext($agedBrie);
             $agedBrie->setNext($backstagePasses);
-            
+            $backstagePasses->setNext($normal);
+
             $conjured->updateItem ($item);
 
 
