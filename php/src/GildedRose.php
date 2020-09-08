@@ -22,6 +22,7 @@ final class GildedRose
         abstract class Handler {
 
             protected $successor;
+            protected $name;
             //protected $item;
 
             /*
@@ -55,13 +56,13 @@ final class GildedRose
 
             private $name='Conjured';
 
-            public function updateItem (){
-                if($this->item->name==$this->name){
-                    $this->item->sell_in = $this->item->sell_in - 1;
-                    $this->item->quality = $this->item->quality - 2;
+            public function updateItem ($item){
+                if($item->name==$this->name){
+                    $item->sell_in = $item->sell_in - 1;
+                    $item->quality = $item->quality - 2;
                 }
                 else{
-                    parent::updateItem ();
+                    parent::updateItem ($item);
                 }
             }
 
@@ -71,13 +72,13 @@ final class GildedRose
 
             private $name='Sulfuras, Hand of Ragnaros';
 
-            public function updateItem (){
-                if($this->item->name==$this->name){
-                    $this->item->sell_in = $this->item->sell_in;
-                    $this->item->quality = $this->item->quality;
+            public function updateItem ($item){
+                if($item->name==$this->name){
+                    $item->sell_in = $item->sell_in;
+                    $item->quality = $item->quality;
                 }
                 else{
-                    parent::updateItem ();
+                    parent::updateItem ($item);
                 }
             }
 
@@ -87,13 +88,13 @@ final class GildedRose
 
             private $name='Aged Brie';
 
-            public function updateItem (){
-                if($this->item->name==$this->name){
-                    $this->item->sell_in = $this->item->sell_in-1;
-                    $this->item->quality = $this->item->quality+1;
+            public function updateItem ($item){
+                if($item->name==$this->name){
+                    $item->sell_in = $item->sell_in-1;
+                    $item->quality = $item->quality+1;
                 }
                 else{
-                    parent::updateItem ();
+                    parent::updateItem ($item);
                 }
             }
         }
@@ -102,42 +103,43 @@ final class GildedRose
 
             private $name='Backstage passes to a TAFKAL80ETC concert';
 
-            public function updateItem (){
-                if($this->item->name==$this->name){
+            public function updateItem ($item){
+                if($item->name==$this->name){
 
-                    if ($this->item->sell_in>11){
-                        $this->item->sell_in = $this->item->sell_in-1;
-                        $this->item->quality = $this->item->quality+1;
+                    if ($item->sell_in>11){
+                        $item->sell_in = $item->sell_in-1;
+                        $item->quality = $item->quality+1;
                     }
-                    elseif ($this->item->sell_in>6){
-                        $this->item->sell_in = $this->item->sell_in-1;
-                        $this->item->quality = $this->item->quality+2;
+                    elseif ($item->sell_in>6){
+                        $item->sell_in = $item->sell_in-1;
+                        $item->quality = $item->quality+2;
                     }
-                    elseif ($this->item->sell_in>0){
-                        $this->item->sell_in = $this->item->sell_in-1;
-                        $this->item->quality = $this->item->quality+3;
+                    elseif ($item->sell_in>0){
+                        $item->sell_in = $item->sell_in-1;
+                        $item->quality = $item->quality+3;
                     
                     }
-                    elseif ($this->item->sell_in==0){
-                        $this->item->quality = 0;
+                    elseif ($item->sell_in==0){
+                        $item->quality = 0;
                     }
                 }
                 else{
-                    parent::updateItem ();
+                    parent::updateItem ($item);
                 }
             }
         }
 
         foreach ($this->items as $item) {
-            $conjured=new conjuredItemHandler($item);
-            $sulfuras=new sulfurasItemHandler($item);
-            $agedBrie=new agedBrieItemHandler($item);
-            $backstagePasses=new backstagePassesItemHandler($item);
+            $conjured=new conjuredItemHandler();
+            $sulfuras=new sulfurasItemHandler();
+            $agedBrie=new agedBrieItemHandler();
+            $backstagePasses=new backstagePassesItemHandler();
 
             $conjured->setNext($sulfuras);
             $sulfuras->setNext($agedBrie);
             $agedBrie->setNext($backstagePasses);
-            $conjured->updateItem ();
+            
+            $conjured->updateItem ($item);
 
 
         }
