@@ -62,7 +62,7 @@ final class GildedRose
         class conjuredItemHandler extends Handler
         {
 
-            private $name = 'Conjured';
+            private $name = 'Conjured Mana Cake';
 
             public function checkLimit($item)
             {
