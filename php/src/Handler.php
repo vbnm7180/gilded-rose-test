@@ -45,7 +45,7 @@ abstract class Handler
 class conjuredItemHandler extends Handler
 {
 
-	private $name = 'Conjured Mana Cake';
+	protected $name = 'Conjured Mana Cake';
 
 	public function checkLimit($item)
 	{
@@ -79,7 +79,7 @@ class conjuredItemHandler extends Handler
 class sulfurasItemHandler extends Handler
 {
 
-	private $name = 'Sulfuras, Hand of Ragnaros';
+	protected $name = 'Sulfuras, Hand of Ragnaros';
 
 	public function updateItem($item)
 	{
@@ -95,7 +95,7 @@ class sulfurasItemHandler extends Handler
 class agedBrieItemHandler extends Handler
 {
 
-	private $name = 'Aged Brie';
+	protected $name = 'Aged Brie';
 
 
 	
@@ -135,7 +135,7 @@ class agedBrieItemHandler extends Handler
 class backstagePassesItemHandler extends Handler
 {
 
-	private $name = 'Backstage passes to a TAFKAL80ETC concert';
+	protected $name = 'Backstage passes to a TAFKAL80ETC concert';
 
 
 	

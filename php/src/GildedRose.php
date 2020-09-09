@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+
+
 namespace GildedRose;
-use GildedRose\Handler;
-use GildedRose\conjuredItemHandler;
+
+require_once __DIR__ . '/Handler.php';
 
 final class GildedRose
 {
@@ -22,6 +24,7 @@ final class GildedRose
     {
 
         foreach ($this->items as $item) {
+
             $conjured = new conjuredItemHandler();
             $sulfuras = new sulfurasItemHandler();
             $agedBrie = new agedBrieItemHandler();
