@@ -167,16 +167,17 @@ final class GildedRose
 
             public function setSpeed($item)
             {
-                if ($item->sell_in > 11) {
+                if ($item->sell_in > 10) {
                     $this->speed = 1;
-                } elseif ($item->sell_in > 6) {
+                } elseif ($item->sell_in > 5) {
                     $this->speed = 2;
                 }
-                elseif ($item->sell_in > 0) {
+                elseif ($item->sell_in >= 0) {
                     $this->speed = 3;
                 }
-                elseif ($item->sell_in <= 0){
+                elseif ($item->sell_in < 0){
                     $this->speed = 0;
+                    $item->quality=0;
                 }
             }
 
@@ -248,8 +249,7 @@ final class GildedRose
         }
 
 
-
-
+        /*
         foreach ($this->items as $item) {
             if ($item->name != 'Aged Brie' and $item->name != 'Backstage passes to a TAFKAL80ETC concert') {
                 if ($item->quality > 0) {
@@ -297,5 +297,6 @@ final class GildedRose
                 }
             }
         }
+        */
     }
 }
