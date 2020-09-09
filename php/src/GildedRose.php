@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace GildedRose;
+use GildedRose\Handler;
+use GildedRose\conjuredItemHandler;
 
 final class GildedRose
 {

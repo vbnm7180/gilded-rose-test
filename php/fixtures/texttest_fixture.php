@@ -3,6 +3,8 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use GildedRose\GildedRose;
+use GildedRose\Handler;
+use GildedRose\conjuredItemHandler;
 use GildedRose\Item;
 
 echo "OMGHAI!" . PHP_EOL;
