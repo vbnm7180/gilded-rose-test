@@ -154,21 +154,44 @@ final class GildedRose
 
             private $name = 'Backstage passes to a TAFKAL80ETC concert';
 
+
+            
+            public function checkLimit($item)
+            {
+                if ($item->quality == 50) {
+                    $this->limit == true;
+                } else {
+                    $this->limit == false;
+                }
+            }
+
+            public function setSpeed($item)
+            {
+                if ($item->sell_in > 11) {
+                    $this->speed = 1;
+                } elseif ($item->sell_in > 6) {
+                    $this->speed = 2;
+                }
+                elseif ($item->sell_in > 0) {
+                    $this->speed = 3;
+                }
+                elseif ($item->sell_in <= 0){
+                    $this->speed = 0;
+                }
+            }
+
             public function updateItem($item)
             {
                 if ($item->name == $this->name) {
 
-                    if ($item->sell_in > 11) {
+                    $this->checkLimit($item);
+                    if ($this->limit == true) {
                         $item->sell_in = $item->sell_in - 1;
-                        $item->quality = $item->quality + 1;
-                    } elseif ($item->sell_in > 6) {
+                        $item->quality = $item->quality;
+                    } else {
+                        $this->setSpeed($item);
                         $item->sell_in = $item->sell_in - 1;
-                        $item->quality = $item->quality + 2;
-                    } elseif ($item->sell_in > 0) {
-                        $item->sell_in = $item->sell_in - 1;
-                        $item->quality = $item->quality + 3;
-                    } elseif ($item->sell_in == 0) {
-                        $item->quality = 0;
+                        $item->quality = $item->quality + 1 * $this->speed;
                     }
                 } else {
                     parent::updateItem($item);
