@@ -14,9 +14,9 @@ abstract class Handler
 	public function checkLimit($item)
 	{
 		if ($item->quality == 0) {
-			$this->limit == true;
+			$this->limit = true;
 		} else {
-			$this->limit == false;
+			$this->limit = false;
 		}
 	}
 
@@ -102,9 +102,9 @@ class agedBrieItemHandler extends Handler
 	public function checkLimit($item)
 	{
 		if ($item->quality == 50) {
-			$this->limit == true;
+			$this->limit = true;
 		} else {
-			$this->limit == false;
+			$this->limit = false;
 		}
 	}
 
@@ -142,9 +142,9 @@ class backstagePassesItemHandler extends Handler
 	public function checkLimit($item)
 	{
 		if ($item->quality == 50) {
-			$this->limit == true;
+			$this->limit = true;
 		} else {
-			$this->limit == false;
+			$this->limit = false;
 		}
 	}
 
@@ -198,20 +198,26 @@ class normalItemHandler extends Handler
 
 	public function updateItem($item)
 	{
-		if ($item->name == $this->name) {
+		//if ($item->name == $this->name) {
 
 			$this->checkLimit($item);
+
+			echo 'Предел:' . json_encode($this->limit);
+
 			if ($this->limit == true) {
 				$item->sell_in = $item->sell_in - 1;
 				$item->quality = $item->quality;
+
 			} else {
 				$this->setSpeed($item);
 				$item->sell_in = $item->sell_in - 1;
 				$item->quality = $item->quality - 1 * $this->speed;
 			}
+		/*
 		} else {
 			parent::updateItem($item);
 		}
+		*/
 	}
 
 }
