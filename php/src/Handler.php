@@ -13,16 +13,14 @@ abstract class Handler
 
 	public function checkLimit($item)
 	{
-		if ($item->quality == 0) {
-			$this->limit = true;
-		} else {
-			$this->limit = false;
+		if ($item->quality < 0) {
+			$item->quality = 0;
 		}
 	}
 
 	public function setSpeed($item)
 	{
-		if ($item->sell_in < 0) {
+		if ($item->sell_in <= 0) {
 			$this->speed = 2;
 		} else {
 			$this->speed = 1;
@@ -60,16 +58,10 @@ class conjuredItemHandler extends Handler
 	public function updateItem($item)
 	{
 		if ($item->name == $this->name) {
-
+			$this->setSpeed($item);
+			$item->sell_in = $item->sell_in - 1;
+			$item->quality = $item->quality - 2 * $this->speed;
 			$this->checkLimit($item);
-			if ($this->limit == true) {
-				$item->sell_in = $item->sell_in - 1;
-				$item->quality = $item->quality;
-			} else {
-				$this->setSpeed($item);
-				$item->sell_in = $item->sell_in - 1;
-				$item->quality = $item->quality - 2 * $this->speed;
-			}
 		} else {
 			parent::updateItem($item);
 		}
@@ -98,13 +90,11 @@ class agedBrieItemHandler extends Handler
 	protected $name = 'Aged Brie';
 
 
-	
+
 	public function checkLimit($item)
 	{
-		if ($item->quality == 50) {
-			$this->limit = true;
-		} else {
-			$this->limit = false;
+		if ($item->quality > 50) {
+			$item->quality = 50;
 		}
 	}
 
@@ -116,16 +106,10 @@ class agedBrieItemHandler extends Handler
 	public function updateItem($item)
 	{
 		if ($item->name == $this->name) {
-
+			$this->setSpeed($item);
+			$item->sell_in = $item->sell_in - 1;
+			$item->quality = $item->quality + 1 * $this->speed;
 			$this->checkLimit($item);
-			if ($this->limit == true) {
-				$item->sell_in = $item->sell_in - 1;
-				$item->quality = $item->quality;
-			} else {
-				$this->setSpeed($item);
-				$item->sell_in = $item->sell_in - 1;
-				$item->quality = $item->quality + 1 * $this->speed;
-			}
 		} else {
 			parent::updateItem($item);
 		}
@@ -137,14 +121,10 @@ class backstagePassesItemHandler extends Handler
 
 	protected $name = 'Backstage passes to a TAFKAL80ETC concert';
 
-
-	
 	public function checkLimit($item)
 	{
-		if ($item->quality == 50) {
-			$this->limit = true;
-		} else {
-			$this->limit = false;
+		if ($item->quality > 50) {
+			$item->quality = 50;
 		}
 	}
 
@@ -154,13 +134,11 @@ class backstagePassesItemHandler extends Handler
 			$this->speed = 1;
 		} elseif ($item->sell_in > 5) {
 			$this->speed = 2;
-		}
-		elseif ($item->sell_in >= 0) {
+		} elseif ($item->sell_in > 0) {
 			$this->speed = 3;
-		}
-		elseif ($item->sell_in < 0){
+		} elseif ($item->sell_in <= 0) {
 			$this->speed = 0;
-			$item->quality=0;
+			$item->quality = 0;
 		}
 	}
 
@@ -168,15 +146,10 @@ class backstagePassesItemHandler extends Handler
 	{
 		if ($item->name == $this->name) {
 
+			$this->setSpeed($item);
+			$item->sell_in = $item->sell_in - 1;
+			$item->quality = $item->quality + 1 * $this->speed;
 			$this->checkLimit($item);
-			if ($this->limit == true) {
-				$item->sell_in = $item->sell_in - 1;
-				$item->quality = $item->quality;
-			} else {
-				$this->setSpeed($item);
-				$item->sell_in = $item->sell_in - 1;
-				$item->quality = $item->quality + 1 * $this->speed;
-			}
 		} else {
 			parent::updateItem($item);
 		}
@@ -198,26 +171,9 @@ class normalItemHandler extends Handler
 
 	public function updateItem($item)
 	{
-		//if ($item->name == $this->name) {
-
-			$this->checkLimit($item);
-
-			echo 'Предел:' . json_encode($this->limit);
-
-			if ($this->limit == true) {
-				$item->sell_in = $item->sell_in - 1;
-				$item->quality = $item->quality;
-
-			} else {
-				$this->setSpeed($item);
-				$item->sell_in = $item->sell_in - 1;
-				$item->quality = $item->quality - 1 * $this->speed;
-			}
-		/*
-		} else {
-			parent::updateItem($item);
-		}
-		*/
+		$this->setSpeed($item);
+		$item->sell_in = $item->sell_in - 1;
+		$item->quality = $item->quality - 1 * $this->speed;
+		$this->checkLimit($item);
 	}
-
 }
